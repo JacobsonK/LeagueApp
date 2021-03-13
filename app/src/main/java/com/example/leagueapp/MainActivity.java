@@ -6,9 +6,11 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 
+import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,6 +18,9 @@ import android.view.View;
 import com.example.leagueapp.ui.main.SectionsPagerAdapter;
 
 public class MainActivity extends AppCompatActivity {
+    private static final String apiKey = "RGAPI-71cdd8bc-5f6a-4e2f-9a1e-603ef25ee31c";
+
+    private FreeChampionViewModel freeChampionViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,5 +40,10 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+        this.freeChampionViewModel = new ViewModelProvider(this)
+                .get(FreeChampionViewModel.class);
+
+        this.freeChampionViewModel.loadFreeChampionData(apiKey);
     }
 }
