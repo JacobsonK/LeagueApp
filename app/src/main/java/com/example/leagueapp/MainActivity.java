@@ -13,6 +13,8 @@ import com.google.android.material.tabs.TabLayout;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -36,11 +38,13 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
-    private static final String apiKey = "RGAPI-71cdd8bc-5f6a-4e2f-9a1e-603ef25ee31c";
+    private static final String apiKey = "RGAPI-a40425ab-ffc3-496e-884b-8ee4a8f1d936";
 
     private FreeChampionViewModel freeChampionViewModel;
     private ArrayList<Integer> freeChampionList;
     private ArrayList<ChampionData> championDataList;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +64,8 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+
 
         this.freeChampionViewModel = new ViewModelProvider(this)
                 .get(FreeChampionViewModel.class);
@@ -113,9 +119,9 @@ public class MainActivity extends AppCompatActivity {
         try {
             JSONObject object = new JSONObject(readJSON());
             JSONObject championDataObject = object.getJSONObject("data");
-            Log.d(TAG, "Getting champion data: " + championDataObject.length());
+//            Log.d(TAG, "Getting champion data: " + championDataObject.length());
             JSONArray championDataArray = championDataObject.toJSONArray(championDataObject.names());
-            Log.d(TAG, "The size of champion data array is : " + championDataArray.length());
+//            Log.d(TAG, "The size of champion data array is : " + championDataArray.length());
 
 
 //            Log.d(TAG, "The size of freeChampionList inside the JSON try loop is: " + freeChampionList.size());
@@ -143,11 +149,11 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
             }
-            Log.d(TAG, "The size of championDataList is: " + championDataList.size());
-            Log.d(TAG, "These are the free champions for the week: ");
-            for (int k = 0; k < championDataList.size(); k++) {
-                Log.d("Free Champ", "index " + k + " : " + championDataList.get(k).getName());
-            }
+//            Log.d(TAG, "The size of championDataList is: " + championDataList.size());
+//            Log.d(TAG, "These are the free champions for the week: ");
+//            for (int k = 0; k < championDataList.size(); k++) {
+//                Log.d("Free Champ", "index " + k + " : " + championDataList.get(k).getName());
+//            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
