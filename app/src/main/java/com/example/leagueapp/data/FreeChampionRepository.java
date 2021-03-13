@@ -42,7 +42,7 @@ public class FreeChampionRepository {
                 Log.d(TAG, "Callback got response with the URL: " + call.request().url());
                 if (response.code() == 200) {
                     freeChampionData.setValue(response.body());
-                    Log.d(TAG, "Set the freeChampionData with the response" + freeChampionData.getValue().toString());
+                    Log.d(TAG, "Set the freeChampionData with the response" + freeChampionData.getValue());
                 } else {
                     Log.d(TAG, "unsuccessful API request: " + call.request().url());
                     Log.d(TAG, "  -- response status code: " + response.code());
