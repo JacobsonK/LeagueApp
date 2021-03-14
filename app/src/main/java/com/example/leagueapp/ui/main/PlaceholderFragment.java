@@ -25,6 +25,7 @@ import com.example.leagueapp.data.FreeChampionData;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -47,6 +48,7 @@ public class PlaceholderFragment extends Fragment {
     private FreeChampionViewModel freeChampionViewModel;
     private ArrayList<Integer> freeChampionList;
     private ArrayList<ChampionData> championDataList;
+    private TextView banner;
 
     public static PlaceholderFragment newInstance(int index) {
         PlaceholderFragment fragment = new PlaceholderFragment();
@@ -76,7 +78,8 @@ public class PlaceholderFragment extends Fragment {
             case 1:
                 root = inflater.inflate(R.layout.fragment_main, container, false);
                 final TextView textView = root.findViewById(R.id.section_label);
-                textView.setText("This is case 1");
+                banner = root.findViewById(R.id.tv_banner);
+                banner.setText("League App");
                 return root;
             case 2:
                 root = inflater.inflate(R.layout.fragment_champion, container, false);
