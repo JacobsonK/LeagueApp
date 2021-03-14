@@ -25,7 +25,6 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
-    //private static final String apiKey = "RGAPI-71cdd8bc-5f6a-4e2f-9a1e-603ef25ee31c";
     private static final String apiKey = "RGAPI-b86321c0-3198-40b2-b1fd-6f15aebf2bfc";
 
     private FreeChampionViewModel freeChampionViewModel;
