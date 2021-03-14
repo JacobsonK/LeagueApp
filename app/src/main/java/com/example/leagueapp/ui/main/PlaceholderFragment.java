@@ -1,6 +1,7 @@
 package com.example.leagueapp.ui.main;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,15 +16,26 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.leagueapp.FreeChampionAdapter;
+import com.example.leagueapp.FreeChampionViewModel;
+import com.example.leagueapp.MainActivity;
 import com.example.leagueapp.R;
 import com.example.leagueapp.data.ChampionData;
+import com.example.leagueapp.data.FreeChampionData;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 
 /**
  * A placeholder fragment containing a simple view.
  */
 public class PlaceholderFragment extends Fragment {
+    private static final String TAG = PlaceholderFragment.class.getSimpleName();
+    private static final String apiKey = "RGAPI-a40425ab-ffc3-496e-884b-8ee4a8f1d936";
 
     private static final String ARG_SECTION_NUMBER = "section_number";
 
@@ -31,6 +43,10 @@ public class PlaceholderFragment extends Fragment {
 
     private RecyclerView freeChampionsRV;
     private FreeChampionAdapter freeChampionAdapter;
+
+    private FreeChampionViewModel freeChampionViewModel;
+    private ArrayList<Integer> freeChampionList;
+    private ArrayList<ChampionData> championDataList;
 
     public static PlaceholderFragment newInstance(int index) {
         PlaceholderFragment fragment = new PlaceholderFragment();
@@ -71,34 +87,126 @@ public class PlaceholderFragment extends Fragment {
                 this.freeChampionAdapter = new FreeChampionAdapter();
                 this.freeChampionsRV.setAdapter(freeChampionAdapter);
 
-                ArrayList<ChampionData> tempChampDataList = new ArrayList<>();
+//                ArrayList<ChampionData> tempChampDataList = new ArrayList<>();
 
-                ChampionData champion1 = new ChampionData();
-                champion1.setKey(0);
-                champion1.setName("Aatrox");
-                champion1.setTitle("the Darkin Blade");
-                champion1.setImageName("Aatrox.png");
+//                ChampionData champion1 = new ChampionData();
+//                champion1.setKey(0);
+//                champion1.setName("Aatrox");
+//                champion1.setTitle("the Darkin Blade");
+//                champion1.setImageName("Aatrox.png");
+//
+//                ChampionData champion2 = new ChampionData();
+//                champion2.setKey(1);
+//                champion2.setName("Ahri");
+//                champion2.setTitle("Blade");
+//                champion2.setImageName("2.png");
+//
+//                ChampionData champion3 = new ChampionData();
+//                champion3.setKey(2);
+//                champion3.setName("Akali");
+//                champion3.setTitle("stuff");
+//                champion3.setImageName("3.png");
+//
+//                tempChampDataList.add(champion1);
+//                tempChampDataList.add(champion2);
+//                tempChampDataList.add(champion3);
+//
+//                freeChampionAdapter.updateChampionData(tempChampDataList);
 
-                ChampionData champion2 = new ChampionData();
-                champion2.setKey(1);
-                champion2.setName("Ahri");
-                champion2.setTitle("Blade");
-                champion2.setImageName("2.png");
+                this.freeChampionViewModel = new ViewModelProvider(this)
+                        .get(FreeChampionViewModel.class);
 
-                ChampionData champion3 = new ChampionData();
-                champion3.setKey(2);
-                champion3.setName("Akali");
-                champion3.setTitle("stuff");
-                champion3.setImageName("3.png");
+                championDataList = new ArrayList<>();
 
-                tempChampDataList.add(champion1);
-                tempChampDataList.add(champion2);
-                tempChampDataList.add(champion3);
-
-                freeChampionAdapter.updateChampionData(tempChampDataList);
+                this.freeChampionViewModel.loadFreeChampionData(apiKey);
+                this.freeChampionViewModel.getFreeChampionData().observe(
+                        getViewLifecycleOwner(),
+                        new Observer<FreeChampionData>() {
+                            @Override
+                            public void onChanged(FreeChampionData freeChampionData) {
+                                if (freeChampionData != null) {
+                                    Log.d(TAG,"Got the data from the api request");
+                                    freeChampionList = freeChampionData.getFreeChampionList();
+                                    if (championDataList.isEmpty()) {
+                                        try {
+                                            setChampionDataList();
+                                            freeChampionAdapter.updateChampionData(championDataList);
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                );
 
                 return root;
         }
         return null;
+    }
+
+
+    public String readJSON() {
+        String json = null;
+        try {
+            // Opening data.json file
+            InputStream inputStream = getContext().getAssets().open("Champions.json");
+            int size = inputStream.available();
+            byte[] buffer = new byte[size];
+            // read values in the byte array
+            inputStream.read(buffer);
+            inputStream.close();
+            // convert byte to string
+            json = new String(buffer, "UTF-8");
+        } catch (IOException e) {
+            e.printStackTrace();
+            return json;
+        }
+        return json;
+    }
+
+
+    public void setChampionDataList() throws JSONException {
+        try {
+            JSONObject object = new JSONObject(readJSON());
+            JSONObject championDataObject = object.getJSONObject("data");
+//            Log.d(TAG, "Getting champion data: " + championDataObject.length());
+            JSONArray championDataArray = championDataObject.toJSONArray(championDataObject.names());
+//            Log.d(TAG, "The size of champion data array is : " + championDataArray.length());
+
+
+//            Log.d(TAG, "The size of freeChampionList inside the JSON try loop is: " + freeChampionList.size());
+            for (int i = 0; i < championDataArray.length(); i++) {
+//                Log.d(TAG, "The name of the champion at i is: " + championDataArray.getJSONObject(i).getString("name"));
+                JSONObject champImageObj = (JSONObject) championDataArray.getJSONObject(i).get("image");
+//                Log.d(TAG, "The string inside full is: " + champImageObj.get("full"));
+                JSONObject jsonObject = championDataArray.getJSONObject(i);
+                String key = jsonObject.getString("key");
+                String name = jsonObject.getString("name");
+                String title = jsonObject.getString("title");
+                String imageName = champImageObj.getString("full");
+
+                for (int j = 0; j < freeChampionList.size(); j++) {
+                    int championKey = Integer.parseInt(key);
+                    if (championKey == freeChampionList.get(j)) {
+                        ChampionData champion = new ChampionData();
+
+                        champion.setKey(championKey);
+                        champion.setName(name);
+                        champion.setTitle(title);
+                        champion.setImageName(imageName);
+
+                        championDataList.add(champion);
+                    }
+                }
+            }
+//            Log.d(TAG, "The size of championDataList is: " + championDataList.size());
+//            Log.d(TAG, "These are the free champions for the week: ");
+//            for (int k = 0; k < championDataList.size(); k++) {
+//                Log.d("Free Champ", "index " + k + " : " + championDataList.get(k).getName());
+//            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 }
