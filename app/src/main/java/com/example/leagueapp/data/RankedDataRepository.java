@@ -5,6 +5,8 @@ import android.util.Log;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -20,7 +22,7 @@ public class RankedDataRepository {
 
     private String BASE_URL = "https://"+region+".api.riotgames.com/lol/league/v4/entries/";
 
-    private MutableLiveData<RankedData> rankedData;
+    private MutableLiveData<List<RankedData>> rankedData;
 
     private RiotGameService riotGameService;
 
@@ -36,17 +38,19 @@ public class RankedDataRepository {
         this.riotGameService = retrofit.create(RiotGameService.class);
     }
 
-    public LiveData<RankedData> getRankedData() {return this.rankedData; }
+    public LiveData<List<RankedData>> getRankedData() {return this.rankedData; }
 
     public void loadRankedData(String apiKey, String id) {
-        Call<RankedData> req = this.riotGameService.fetchRankedData(apiKey, id);
-        req.enqueue(new Callback<RankedData>() {
+        Call<List<RankedData>> req = this.riotGameService.fetchRankedData(apiKey, id);
+        req.enqueue(new Callback<List<RankedData>>() {
             @Override
-            public void onResponse(Call<RankedData> call, Response<RankedData> response) {
+            public void onResponse(Call<List<RankedData>> call, Response<List<RankedData>> response) {
                 Log.d(TAG, "Callback got response with the URL: " + call.request().url());
                 if (response.code() == 200) {
-                    rankedData.setValue(response.body());
-                    Log.d(TAG, "Set the AccountData with the response" + rankedData.getValue().toString());
+                    Log.d(TAG, "Response code was 200");
+                    Log.d(TAG, "Printing the body of the response: " + response.body());
+//                    rankedData.setValue(response.body());
+//                    Log.d(TAG, "Set the AccountData with the response" + rankedData.getValue().toString());
 //                    Log.d(TAG, rankedData.getValue().queueType);
 //                    Log.d(TAG, rankedData.getValue().rank);
 //                    Log.d(TAG, rankedData.getValue().tier);
@@ -62,7 +66,7 @@ public class RankedDataRepository {
             }
 
             @Override
-            public void onFailure(Call<RankedData> call, Throwable t) {
+            public void onFailure(Call<List<RankedData>> call, Throwable t) {
                 Log.d(TAG, "unsuccessful API request: " + call.request().url());
                 t.printStackTrace();
             }

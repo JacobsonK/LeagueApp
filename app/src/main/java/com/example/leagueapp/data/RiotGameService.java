@@ -1,5 +1,7 @@
 package com.example.leagueapp.data;
 
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
@@ -13,6 +15,6 @@ public interface RiotGameService {
     Call<AccountData> fetchAccountData(@Path("accountName") String accountName, @Query("api_key") String apiKey);
 
     @GET("by-summoner/{id}")
-    Call<RankedData> fetchRankedData(@Path("id") String id, @Query("api_key") String apiKey);
+    Call<List<RankedData>> fetchRankedData(@Path("id") String id, @Query("api_key") String apiKey);
 
 }
