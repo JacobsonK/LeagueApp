@@ -1,23 +1,34 @@
 package com.example.leagueapp;
 
+import android.content.Context;
+import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.leagueapp.data.ChampionData;
 import com.example.leagueapp.data.FreeChampionData;
+import com.example.leagueapp.ui.main.PlaceholderFragment;
 
 import java.util.ArrayList;
 
 public class FreeChampionAdapter extends RecyclerView.Adapter<FreeChampionAdapter.FreeChampionViewHolder> {
     private ArrayList<ChampionData> championData;
+    private OnFreeChampionClickListener onFreeChampionClickListener;
 
-    public FreeChampionAdapter() {
+    public interface OnFreeChampionClickListener {
+        void onFreeChampionClick(ChampionData champion);
+    }
+
+    public FreeChampionAdapter(OnFreeChampionClickListener onFreeChampionClickListener) {
         this.championData = new ArrayList<>();
+        this.onFreeChampionClickListener = onFreeChampionClickListener;
     }
 
     @NonNull
@@ -30,7 +41,7 @@ public class FreeChampionAdapter extends RecyclerView.Adapter<FreeChampionAdapte
 
     @Override
     public void onBindViewHolder(@NonNull FreeChampionViewHolder holder, int position) {
-        holder.bind(this.championData.get(position).getName());
+        holder.bind(this.championData.get(position));
     }
 
     public void updateChampionData(ArrayList<ChampionData> championData) {
@@ -49,14 +60,28 @@ public class FreeChampionAdapter extends RecyclerView.Adapter<FreeChampionAdapte
 
     public class FreeChampionViewHolder extends RecyclerView.ViewHolder {
         final private TextView champName;
+        final private ImageView champIcon;
 
         public FreeChampionViewHolder(@NonNull View itemView) {
             super(itemView);
             champName = itemView.findViewById(R.id.tv_free_champion_name);
+            champIcon = itemView.findViewById(R.id.iv_champion_icon);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onFreeChampionClickListener.onFreeChampionClick(
+                            championData.get(getAdapterPosition())
+                    );
+                }
+            });
         }
 
-        public void bind(String name) {
-            champName.setText(name);
+        public void bind(ChampionData champion) {
+            Context ctx = this.itemView.getContext();
+
+            champName.setText(champion.getName());
+            Glide.with(ctx).load(champion.getImageURl()).into(champIcon);
         }
     }
 }

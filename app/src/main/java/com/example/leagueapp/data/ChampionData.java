@@ -3,6 +3,7 @@ package com.example.leagueapp.data;
 import com.google.gson.annotations.SerializedName;
 
 public class ChampionData {
+    private final String CHAMPION_ICON_URL = "https://ddragon.leagueoflegends.com/cdn/11.5.1/img/champion/";
 
     private int key;
     private String name;
@@ -39,5 +40,9 @@ public class ChampionData {
 
     public String getImageName() {
         return imageName;
+    }
+
+    public String getImageURl() {
+        return CHAMPION_ICON_URL + imageName;
     }
 }
