@@ -1,5 +1,7 @@
 package com.example.leagueapp.ui.main;
 
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -48,6 +50,8 @@ public class PlaceholderFragment extends Fragment implements FreeChampionAdapter
     private ArrayList<Integer> freeChampionList;
     private ArrayList<ChampionData> championDataList;
 
+    private PackageManager packageManager;
+
     public static PlaceholderFragment newInstance(int index) {
         PlaceholderFragment fragment = new PlaceholderFragment();
         Bundle bundle = new Bundle();
@@ -83,6 +87,8 @@ public class PlaceholderFragment extends Fragment implements FreeChampionAdapter
                 this.freeChampionsRV = root.findViewById(R.id.rv_free_champion);
                 this.freeChampionsRV.setLayoutManager(new LinearLayoutManager(root.getContext()));
                 this.freeChampionsRV.setHasFixedSize(true);
+
+                this.packageManager = getContext().getPackageManager();
 
                 this.freeChampionAdapter = new FreeChampionAdapter(this);
                 this.freeChampionsRV.setAdapter(freeChampionAdapter);
@@ -187,5 +193,13 @@ public class PlaceholderFragment extends Fragment implements FreeChampionAdapter
     @Override
     public void onFreeChampionClick(ChampionData champion) {
         Log.d(TAG, "The champion that was clicked is: " + champion.getName());
+
+        Intent intent = new Intent(Intent.ACTION_SEARCH);
+        intent.setPackage("com.google.android.youtube");
+        intent.putExtra(
+                "query",
+                champion.getName() + " champion spotlight");
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 }
