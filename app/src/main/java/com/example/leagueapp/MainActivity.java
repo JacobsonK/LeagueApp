@@ -18,9 +18,11 @@ import android.view.View;
 import com.example.leagueapp.ui.main.SectionsPagerAdapter;
 
 public class MainActivity extends AppCompatActivity {
-    private static final String apiKey = "RGAPI-71cdd8bc-5f6a-4e2f-9a1e-603ef25ee31c";
+    private static final String apiKey = "RGAPI-b86321c0-3198-40b2-b1fd-6f15aebf2bfc";
 
     private FreeChampionViewModel freeChampionViewModel;
+    private AccountDataViewModel accountDataViewModel;
+    private RankedDataViewModel rankedDataViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,5 +47,17 @@ public class MainActivity extends AppCompatActivity {
                 .get(FreeChampionViewModel.class);
 
         this.freeChampionViewModel.loadFreeChampionData(apiKey);
+
+        this.accountDataViewModel = new ViewModelProvider(this)
+                .get(AccountDataViewModel.class);
+
+        this.accountDataViewModel.loadAccountData(apiKey, "C9 Zven");
+
+        this.rankedDataViewModel = new ViewModelProvider(this)
+                .get(RankedDataViewModel.class);
+
+        this.rankedDataViewModel.loadRankedData( apiKey,"X-NDYFVDo_C02eVWZSxpFDFhHnULlYxs7LF5L4JrVdLAwI4");
+
+
     }
 }
