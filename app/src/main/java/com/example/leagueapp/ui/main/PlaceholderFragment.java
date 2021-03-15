@@ -1,5 +1,7 @@
 package com.example.leagueapp.ui.main;
 
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -34,7 +36,7 @@ import java.util.ArrayList;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class PlaceholderFragment extends Fragment {
+public class PlaceholderFragment extends Fragment implements FreeChampionAdapter.OnFreeChampionClickListener {
     private static final String TAG = PlaceholderFragment.class.getSimpleName();
     private static final String apiKey = "RGAPI-a40425ab-ffc3-496e-884b-8ee4a8f1d936";
 
@@ -49,6 +51,8 @@ public class PlaceholderFragment extends Fragment {
     private ArrayList<Integer> freeChampionList;
     private ArrayList<ChampionData> championDataList;
     private TextView banner;
+
+    private PackageManager packageManager;
 
     public static PlaceholderFragment newInstance(int index) {
         PlaceholderFragment fragment = new PlaceholderFragment();
@@ -87,7 +91,9 @@ public class PlaceholderFragment extends Fragment {
                 this.freeChampionsRV.setLayoutManager(new LinearLayoutManager(root.getContext()));
                 this.freeChampionsRV.setHasFixedSize(true);
 
-                this.freeChampionAdapter = new FreeChampionAdapter();
+                this.packageManager = getContext().getPackageManager();
+
+                this.freeChampionAdapter = new FreeChampionAdapter(this);
                 this.freeChampionsRV.setAdapter(freeChampionAdapter);
 
                 this.freeChampionViewModel = new ViewModelProvider(this)
@@ -185,5 +191,18 @@ public class PlaceholderFragment extends Fragment {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onFreeChampionClick(ChampionData champion) {
+        Log.d(TAG, "The champion that was clicked is: " + champion.getName());
+
+        Intent intent = new Intent(Intent.ACTION_SEARCH);
+        intent.setPackage("com.google.android.youtube");
+        intent.putExtra(
+                "query",
+                champion.getName() + " champion spotlight");
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 }
