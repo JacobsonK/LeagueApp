@@ -46,7 +46,7 @@ public class AccountDataRepository {
                     Log.d(TAG, "Set the AccountData with the response" + accountData.getValue().toString());
                     Log.d(TAG, accountData.getValue().name);
                     Log.d(TAG, accountData.getValue().id);
-                    Log.d(TAG, accountData.getValue().summonerLevel.toString());
+                    Log.d(TAG, accountData.getValue().profileIconId.toString());
                 } else {
                     Log.d(TAG, "unsuccessful API request: " + call.request().url());
                     Log.d(TAG, "  -- response status code: " + response.code());

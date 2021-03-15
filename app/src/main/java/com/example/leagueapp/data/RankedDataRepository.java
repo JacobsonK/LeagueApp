@@ -48,6 +48,7 @@ public class RankedDataRepository {
             public void onResponse(Call<List<RankedData>> call, Response<List<RankedData>> response) {
                 Log.d(TAG, "Callback got response with the URL: " + call.request().url());
                 if (response.code() == 200) {
+                    rankedData.setValue(response.body());
                     Log.d(TAG, "Response code was 200");
                     Log.d(TAG, "Printing the body of the response: " + response.body());
                 } else {

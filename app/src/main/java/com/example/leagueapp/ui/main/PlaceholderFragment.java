@@ -3,6 +3,7 @@ package com.example.leagueapp.ui.main;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,6 +27,7 @@ import com.example.leagueapp.FreeChampionViewModel;
 import com.example.leagueapp.MainActivity;
 import com.example.leagueapp.R;
 import com.example.leagueapp.RankedDataViewModel;
+import com.example.leagueapp.SummonerDetailActivity;
 import com.example.leagueapp.data.AccountData;
 import com.example.leagueapp.data.ChampionData;
 import com.example.leagueapp.data.FreeChampionData;
@@ -125,6 +127,14 @@ public class PlaceholderFragment extends Fragment implements FreeChampionAdapter
                                                             public void onChanged(List<RankedData> rankedData) {
                                                                 if(rankedData != null){
                                                                     Log.d(TAG,"All summoner data has been loaded");
+                                                                    Intent intent = new Intent(getContext(), SummonerDetailActivity.class);
+                                                                    intent.putExtra(SummonerDetailActivity.EXTRA_ACCOUNT_DATA, accountData);
+                                                                    ArrayList<RankedData> rankedDataList = new ArrayList<>();
+                                                                    if(!rankedData.isEmpty()){
+                                                                        rankedDataList.add(rankedData.get(0));
+                                                                        intent.putExtra(SummonerDetailActivity.EXTRA_RANKED_DATA, rankedDataList);
+                                                                    }
+                                                                    startActivity(intent);
                                                                 }
                                                                 else{
                                                                     Log.d(TAG, "Data is still loading");
