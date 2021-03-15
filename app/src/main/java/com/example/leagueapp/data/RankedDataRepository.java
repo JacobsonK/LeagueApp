@@ -41,6 +41,7 @@ public class RankedDataRepository {
     public LiveData<List<RankedData>> getRankedData() {return this.rankedData; }
 
     public void loadRankedData(String apiKey, String id) {
+        Log.d(TAG,"LOAD RANKED DATA FUNCTION WAS CALLED");
         Call<List<RankedData>> req = this.riotGameService.fetchRankedData(apiKey, id);
         req.enqueue(new Callback<List<RankedData>>() {
             @Override
@@ -49,15 +50,6 @@ public class RankedDataRepository {
                 if (response.code() == 200) {
                     Log.d(TAG, "Response code was 200");
                     Log.d(TAG, "Printing the body of the response: " + response.body());
-//                    rankedData.setValue(response.body());
-//                    Log.d(TAG, "Set the AccountData with the response" + rankedData.getValue().toString());
-//                    Log.d(TAG, rankedData.getValue().queueType);
-//                    Log.d(TAG, rankedData.getValue().rank);
-//                    Log.d(TAG, rankedData.getValue().tier);
-//                    Log.d(TAG, rankedData.getValue().wins.toString());
-//                    Log.d(TAG, rankedData.getValue().losses.toString());
-//                    Log.d(TAG, rankedData.getValue().leaguePoints.toString());
-
                 } else {
                     Log.d(TAG, "unsuccessful API request: " + call.request().url());
                     Log.d(TAG, "  -- response status code: " + response.code());

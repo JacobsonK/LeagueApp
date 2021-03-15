@@ -38,12 +38,10 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
-    private static final String apiKey = "RGAPI-b86321c0-3198-40b2-b1fd-6f15aebf2bfc";
+    private static final String apiKey = "RGAPI-bc324f19-66e8-4e75-bcfb-49bb359359f0";
 
     private FreeChampionViewModel freeChampionViewModel;
     private ArrayList<Integer> freeChampionList;
-    private AccountDataViewModel accountDataViewModel;
-    private RankedDataViewModel rankedDataViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,18 +70,5 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
         );
-
-
-        this.accountDataViewModel = new ViewModelProvider(this)
-                .get(AccountDataViewModel.class);
-
-        this.accountDataViewModel.loadAccountData(apiKey, "C9 Zven");
-
-        this.rankedDataViewModel = new ViewModelProvider(this)
-                .get(RankedDataViewModel.class);
-
-        this.rankedDataViewModel.loadRankedData( apiKey,"X-NDYFVDo_C02eVWZSxpFDFhHnULlYxs7LF5L4JrVdLAwI4");
-
-
     }
 }

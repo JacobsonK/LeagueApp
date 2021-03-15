@@ -3,10 +3,13 @@ package com.example.leagueapp.ui.main;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -17,12 +20,16 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.leagueapp.AccountDataViewModel;
 import com.example.leagueapp.FreeChampionAdapter;
 import com.example.leagueapp.FreeChampionViewModel;
 import com.example.leagueapp.MainActivity;
 import com.example.leagueapp.R;
+import com.example.leagueapp.RankedDataViewModel;
+import com.example.leagueapp.data.AccountData;
 import com.example.leagueapp.data.ChampionData;
 import com.example.leagueapp.data.FreeChampionData;
+import com.example.leagueapp.data.RankedData;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -32,13 +39,14 @@ import org.w3c.dom.Text;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A placeholder fragment containing a simple view.
  */
 public class PlaceholderFragment extends Fragment implements FreeChampionAdapter.OnFreeChampionClickListener {
     private static final String TAG = PlaceholderFragment.class.getSimpleName();
-    private static final String apiKey = "RGAPI-a40425ab-ffc3-496e-884b-8ee4a8f1d936";
+    private static final String apiKey = "RGAPI-bc324f19-66e8-4e75-bcfb-49bb359359f0";
 
     private static final String ARG_SECTION_NUMBER = "section_number";
 
@@ -47,10 +55,16 @@ public class PlaceholderFragment extends Fragment implements FreeChampionAdapter
     private RecyclerView freeChampionsRV;
     private FreeChampionAdapter freeChampionAdapter;
 
+
+    private AccountDataViewModel accountDataViewModel;
+    private RankedDataViewModel rankedDataViewModel;
+
     private FreeChampionViewModel freeChampionViewModel;
     private ArrayList<Integer> freeChampionList;
     private ArrayList<ChampionData> championDataList;
     private TextView banner;
+    private Button searchButton;
+    private EditText summonerInput;
 
     private PackageManager packageManager;
 
@@ -84,6 +98,51 @@ public class PlaceholderFragment extends Fragment implements FreeChampionAdapter
                 final TextView textView = root.findViewById(R.id.section_label);
                 banner = root.findViewById(R.id.tv_banner);
                 banner.setText("League App");
+                summonerInput = root.findViewById(R.id.input_text);
+                searchButton = root.findViewById(R.id.search_button);
+                this.accountDataViewModel = new ViewModelProvider(this)
+                        .get(AccountDataViewModel.class);
+                this.rankedDataViewModel = new ViewModelProvider(this)
+                        .get(RankedDataViewModel.class);
+                searchButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick (View v){
+                        String searchQuery = summonerInput.getText().toString();
+                        if (!TextUtils.isEmpty(searchQuery)) {
+                            Log.d(TAG, "Search is not empty");
+                            accountDataViewModel.loadAccountData(apiKey, searchQuery);
+                            accountDataViewModel.getAccountData().observe(
+                                    getViewLifecycleOwner(),
+                                    new Observer<AccountData>() {
+                                        @Override
+                                        public void onChanged(AccountData accountData) {
+                                            if (accountData != null){
+                                                rankedDataViewModel.loadRankedData(apiKey, accountData.id);
+                                                rankedDataViewModel.getRankedData().observe(
+                                                        getViewLifecycleOwner(),
+                                                        new Observer<List<RankedData>>() {
+                                                            @Override
+                                                            public void onChanged(List<RankedData> rankedData) {
+                                                                if(rankedData != null){
+                                                                    Log.d(TAG,"All summoner data has been loaded");
+                                                                }
+                                                                else{
+                                                                    Log.d(TAG, "Data is still loading");
+                                                                }
+                                                            }
+                                                        }
+                                                );
+                                            }
+                                        }
+                                    }
+                            );
+                        }
+                        else{
+                            Log.d(TAG,"Search is empty");
+                        }
+                    }
+                });
+
                 return root;
             case 2:
                 root = inflater.inflate(R.layout.fragment_champion, container, false);
@@ -205,4 +264,6 @@ public class PlaceholderFragment extends Fragment implements FreeChampionAdapter
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
+
+
 }
