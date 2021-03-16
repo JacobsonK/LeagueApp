@@ -18,4 +18,7 @@ public interface RiotGameService {
     @GET("by-summoner/{id}")
     Call<List<RankedData>> fetchRankedData(@Path("id") String id, @Query("api_key") String apiKey);
 
+    @GET("by-summoner/{id}")
+    Call<List<AccountChampionData>> fetchAccountChampionData(@Path("id") String id, @Query("api_key") String apiKey);
+
 }

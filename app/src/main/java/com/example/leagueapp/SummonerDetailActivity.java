@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.media.Image;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
+import com.example.leagueapp.data.AccountChampionData;
 import com.example.leagueapp.data.AccountData;
 import com.example.leagueapp.data.RankedData;
 
@@ -19,11 +21,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SummonerDetailActivity extends AppCompatActivity {
+    private static final String TAG = SummonerDetailActivity.class.getSimpleName();
 
     public static final String EXTRA_ACCOUNT_DATA = "SummonerDetailActivity.AccountData";
     public static final String EXTRA_RANKED_DATA = "SummonerDetailActivity.RankedData";
+    public static final String EXTRA_ACCOUNT_CHAMPION_DATA = "SummonerDetailActivity.AccountChampionData";
+
     private AccountData accountData;
     private ArrayList<RankedData> rankedData;
+    private ArrayList<AccountChampionData> accountChampionData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -56,6 +62,20 @@ public class SummonerDetailActivity extends AppCompatActivity {
             ImageView summonerIconIV = findViewById(R.id.iv_summoner_icon);
             Glide.with(this).load(accountData.getSummonerIconURL()).into(summonerIconIV);
         }
+
+        if (intent != null && intent.hasExtra(EXTRA_ACCOUNT_CHAMPION_DATA)){
+            this.accountChampionData = (ArrayList<AccountChampionData>) intent.getSerializableExtra(EXTRA_ACCOUNT_CHAMPION_DATA);
+            Log.d(TAG,"Entering champion icon loading");
+            ImageView accountChampionIcon1TV = findViewById(R.id.iv_champion1);
+            Glide.with(this).load(accountChampionData.get(0).getChampionIconURL()).into(accountChampionIcon1TV);
+
+            ImageView accountChampionIcon2TV = findViewById(R.id.iv_champion2);
+            Glide.with(this).load(accountChampionData.get(1).getChampionIconURL()).into(accountChampionIcon2TV);
+
+            ImageView accountChampionIcon3TV = findViewById(R.id.iv_champion3);
+            Glide.with(this).load(accountChampionData.get(2).getChampionIconURL()).into(accountChampionIcon3TV);
+        }
+
     }
 
 }

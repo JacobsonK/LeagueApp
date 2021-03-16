@@ -10,29 +10,55 @@
         android:id="@+id/iv_summoner_icon"
         android:layout_width="64dp"
         android:layout_height="64dp"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="4dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/iv_champion1"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginStart="224dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/iv_champion2"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginStart="264dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/iv_champion3"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginStart="304dp"
         android:layout_marginTop="16dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tv_summoner_name"
-        android:layout_width="160dp"
+        android:layout_width="130dp"
         android:layout_height="37dp"
-        android:layout_marginStart="108dp"
+        android:layout_marginStart="80dp"
         android:layout_marginTop="16dp"
+        android:textSize="24sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:textSize="24sp"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tv_ranked_wins"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_marginTop="60dp"
+        android:layout_marginStart="252dp"
+        android:layout_marginTop="52dp"
         android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.813"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -40,10 +66,9 @@
         android:id="@+id/tv_ranked_losses"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_marginTop="60dp"
+        android:layout_marginStart="284dp"
+        android:layout_marginTop="52dp"
         android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.921"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -51,8 +76,8 @@
         android:id="@+id/tv_division"
         android:layout_width="105dp"
         android:layout_height="30dp"
-        android:layout_marginStart="108dp"
-        android:layout_marginTop="60dp"
+        android:layout_marginStart="80dp"
+        android:layout_marginTop="52dp"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -61,8 +86,8 @@
         android:id="@+id/tv_rank"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_marginStart="220dp"
-        android:layout_marginTop="60dp"
+        android:layout_marginStart="184dp"
+        android:layout_marginTop="52dp"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

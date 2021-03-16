@@ -38,7 +38,7 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
-    private static final String apiKey = "RGAPI-bc324f19-66e8-4e75-bcfb-49bb359359f0";
+    private static final String apiKey = "RGAPI-c6a345a8-0b30-4bba-86cf-10114dd660de";
 
     private FreeChampionViewModel freeChampionViewModel;
     private ArrayList<Integer> freeChampionList;

@@ -21,6 +21,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.leagueapp.AccountChampionDataViewModel;
 import com.example.leagueapp.AccountDataViewModel;
 import com.example.leagueapp.FreeChampionAdapter;
 import com.example.leagueapp.FreeChampionViewModel;
@@ -28,6 +29,7 @@ import com.example.leagueapp.MainActivity;
 import com.example.leagueapp.R;
 import com.example.leagueapp.RankedDataViewModel;
 import com.example.leagueapp.SummonerDetailActivity;
+import com.example.leagueapp.data.AccountChampionData;
 import com.example.leagueapp.data.AccountData;
 import com.example.leagueapp.data.ChampionData;
 import com.example.leagueapp.data.FreeChampionData;
@@ -48,7 +50,7 @@ import java.util.List;
  */
 public class PlaceholderFragment extends Fragment implements FreeChampionAdapter.OnFreeChampionClickListener {
     private static final String TAG = PlaceholderFragment.class.getSimpleName();
-    private static final String apiKey = "RGAPI-bc324f19-66e8-4e75-bcfb-49bb359359f0";
+    private static final String apiKey = "RGAPI-c6a345a8-0b30-4bba-86cf-10114dd660de";
 
     private static final String ARG_SECTION_NUMBER = "section_number";
 
@@ -60,6 +62,7 @@ public class PlaceholderFragment extends Fragment implements FreeChampionAdapter
 
     private AccountDataViewModel accountDataViewModel;
     private RankedDataViewModel rankedDataViewModel;
+    private AccountChampionDataViewModel accountChampionDataViewModel;
 
     private FreeChampionViewModel freeChampionViewModel;
     private ArrayList<Integer> freeChampionList;
@@ -69,6 +72,9 @@ public class PlaceholderFragment extends Fragment implements FreeChampionAdapter
     private EditText summonerInput;
 
     private PackageManager packageManager;
+
+
+    private ArrayList<AccountChampionData> accountChampionDataList = new ArrayList<>();
 
     public static PlaceholderFragment newInstance(int index) {
         PlaceholderFragment fragment = new PlaceholderFragment();
@@ -106,6 +112,8 @@ public class PlaceholderFragment extends Fragment implements FreeChampionAdapter
                         .get(AccountDataViewModel.class);
                 this.rankedDataViewModel = new ViewModelProvider(this)
                         .get(RankedDataViewModel.class);
+                this.accountChampionDataViewModel = new ViewModelProvider(this)
+                        .get(AccountChampionDataViewModel.class);
                 searchButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick (View v){
@@ -119,29 +127,56 @@ public class PlaceholderFragment extends Fragment implements FreeChampionAdapter
                                         @Override
                                         public void onChanged(AccountData accountData) {
                                             if (accountData != null){
-                                                rankedDataViewModel.loadRankedData(apiKey, accountData.id);
-                                                rankedDataViewModel.getRankedData().observe(
+                                                accountChampionDataViewModel.loadAccountChampionData(apiKey, accountData.id);
+                                                accountChampionDataViewModel.getAccountChampionData().observe(
                                                         getViewLifecycleOwner(),
-                                                        new Observer<List<RankedData>>() {
+                                                        new Observer<List<AccountChampionData>>() {
                                                             @Override
-                                                            public void onChanged(List<RankedData> rankedData) {
-                                                                if(rankedData != null){
-                                                                    Log.d(TAG,"All summoner data has been loaded");
-                                                                    Intent intent = new Intent(getContext(), SummonerDetailActivity.class);
-                                                                    intent.putExtra(SummonerDetailActivity.EXTRA_ACCOUNT_DATA, accountData);
-                                                                    ArrayList<RankedData> rankedDataList = new ArrayList<>();
-                                                                    if(!rankedData.isEmpty()){
-                                                                        rankedDataList.add(rankedData.get(0));
-                                                                        intent.putExtra(SummonerDetailActivity.EXTRA_RANKED_DATA, rankedDataList);
-                                                                    }
-                                                                    startActivity(intent);
-                                                                }
-                                                                else{
-                                                                    Log.d(TAG, "Data is still loading");
+                                                            public void onChanged(List<AccountChampionData> accountChampionData) {
+                                                                if (accountChampionData != null)
+                                                                {
+                                                                    Log.d(TAG,"Loaded champion data");
+                                                                    Log.d(TAG, accountChampionData.get(0).championId.toString());
+                                                                    rankedDataViewModel.loadRankedData(apiKey, accountData.id);
+                                                                    rankedDataViewModel.getRankedData().observe(
+                                                                            getViewLifecycleOwner(),
+                                                                            new Observer<List<RankedData>>() {
+                                                                                @Override
+                                                                                public void onChanged(List<RankedData> rankedData) {
+                                                                                    if(rankedData != null){
+                                                                                        Log.d(TAG,"All summoner data has been loaded");
+                                                                                        Intent intent = new Intent(getContext(), SummonerDetailActivity.class);
+                                                                                        intent.putExtra(SummonerDetailActivity.EXTRA_ACCOUNT_DATA, accountData);
+
+                                                                                        if(!accountChampionData.isEmpty()){
+                                                                                            accountChampionDataList.add(accountChampionData.get(0));
+                                                                                            accountChampionDataList.add(accountChampionData.get(1));
+                                                                                            accountChampionDataList.add(accountChampionData.get(2));
+                                                                                            try {
+                                                                                                setAccountChampionName();
+                                                                                            } catch (JSONException e) {
+                                                                                                e.printStackTrace();
+                                                                                            }
+                                                                                            intent.putExtra(SummonerDetailActivity.EXTRA_ACCOUNT_CHAMPION_DATA, accountChampionDataList);
+                                                                                        }
+                                                                                        ArrayList<RankedData> rankedDataList = new ArrayList<>();
+                                                                                        if(!rankedData.isEmpty()){
+                                                                                            rankedDataList.add(rankedData.get(0));
+                                                                                            intent.putExtra(SummonerDetailActivity.EXTRA_RANKED_DATA, rankedDataList);
+                                                                                        }
+                                                                                        startActivity(intent);
+                                                                                    }
+                                                                                    else{
+                                                                                        Log.d(TAG, "Data is still loading");
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                    );
                                                                 }
                                                             }
                                                         }
                                                 );
+
                                             }
                                         }
                                     }
@@ -218,7 +253,33 @@ public class PlaceholderFragment extends Fragment implements FreeChampionAdapter
     }
 
 
-    public void setChampionDataList() throws JSONException {
+    public void setAccountChampionName() throws JSONException {
+        try {
+            JSONObject object = new JSONObject(readJSON());
+            JSONObject championDataObject = object.getJSONObject("data");
+//            Log.d(TAG, "Getting champion data: " + championDataObject.length());
+            JSONArray championDataArray = championDataObject.toJSONArray(championDataObject.names());
+//            Log.d(TAG, "The size of champion data array is : " + championDataArray.length());
+            for (int i = 0; i < championDataArray.length(); i++){
+                JSONObject champImageObj = (JSONObject) championDataArray.getJSONObject(i).get("image");
+                JSONObject jsonObject = championDataArray.getJSONObject(i);
+                String key = jsonObject.getString("key");
+                String imageName = champImageObj.getString("full");
+
+                for (int j = 0; j < 3; j++) {
+                    int championKey = Integer.parseInt(key);
+                    if (championKey == accountChampionDataList.get(j).championId) {
+                        accountChampionDataList.get(j).setName(imageName);
+                    }
+                }
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+            public void setChampionDataList() throws JSONException {
         try {
             JSONObject object = new JSONObject(readJSON());
             JSONObject championDataObject = object.getJSONObject("data");
