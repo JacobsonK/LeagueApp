@@ -10,11 +10,6 @@
     tools:context=".ui.main.PlaceholderFragment"
     android:orientation="vertical">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="This is the free champion page" />
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_free_champion"
         android:layout_width="match_parent"
